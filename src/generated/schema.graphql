@@ -37,8 +37,18 @@ type Like {
 union LoginResult = AuthPayload | InvalidUser
 
 type Mutation {
+  addComment(content: String!, postId: String!): Comment
+  createPost(description: String, isPrivate: Boolean, url: String!): Post
+  deleteComment(id: String!): Comment
+  deletePost(id: String!): Post
+  follow(userToId: String!): Follow
+  like(postId: String!): Like
   login(password: String!, username: String!): LoginResult
   signup(email: String!, name: String!, password: String!, username: String!): SignupResult
+  unfollow(id: String!): Follow
+  unlike(postId: String!): Like
+  updateComment(content: String!, id: String!): Comment
+  updatePost(description: String, id: String!, isPrivate: Boolean, url: String!): Post
 }
 
 type Post {

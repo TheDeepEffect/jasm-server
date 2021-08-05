@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import { CookieOptions } from 'express'
+import { PubSub } from 'graphql-subscriptions'
 
 export type cookie = {
   name: string,
@@ -8,6 +9,8 @@ export type cookie = {
 }
 export interface Context {
   prisma: PrismaClient
+  pubsub: PubSub
+  userId: string
   setCookies: cookie[]
   setHeaders: []
 }

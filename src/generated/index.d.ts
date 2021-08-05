@@ -98,8 +98,18 @@ export interface NexusGenFieldTypes {
     user: NexusGenRootTypes['User'] | null; // User
   }
   Mutation: { // field return type
+    addComment: NexusGenRootTypes['Comment'] | null; // Comment
+    createPost: NexusGenRootTypes['Post'] | null; // Post
+    deleteComment: NexusGenRootTypes['Comment'] | null; // Comment
+    deletePost: NexusGenRootTypes['Post'] | null; // Post
+    follow: NexusGenRootTypes['Follow'] | null; // Follow
+    like: NexusGenRootTypes['Like'] | null; // Like
     login: NexusGenRootTypes['LoginResult'] | null; // LoginResult
     signup: NexusGenRootTypes['SignupResult'] | null; // SignupResult
+    unfollow: NexusGenRootTypes['Follow'] | null; // Follow
+    unlike: NexusGenRootTypes['Like'] | null; // Like
+    updateComment: NexusGenRootTypes['Comment'] | null; // Comment
+    updatePost: NexusGenRootTypes['Post'] | null; // Post
   }
   Post: { // field return type
     author: NexusGenRootTypes['User'] | null; // User
@@ -154,8 +164,18 @@ export interface NexusGenFieldTypeNames {
     user: 'User'
   }
   Mutation: { // field return type name
+    addComment: 'Comment'
+    createPost: 'Post'
+    deleteComment: 'Comment'
+    deletePost: 'Post'
+    follow: 'Follow'
+    like: 'Like'
     login: 'LoginResult'
     signup: 'SignupResult'
+    unfollow: 'Follow'
+    unlike: 'Like'
+    updateComment: 'Comment'
+    updatePost: 'Post'
   }
   Post: { // field return type name
     author: 'User'
@@ -188,6 +208,27 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
+    addComment: { // args
+      content: string; // String!
+      postId: string; // String!
+    }
+    createPost: { // args
+      description?: string | null; // String
+      isPrivate?: boolean | null; // Boolean
+      url: string; // String!
+    }
+    deleteComment: { // args
+      id: string; // String!
+    }
+    deletePost: { // args
+      id: string; // String!
+    }
+    follow: { // args
+      userToId: string; // String!
+    }
+    like: { // args
+      postId: string; // String!
+    }
     login: { // args
       password: string; // String!
       username: string; // String!
@@ -197,6 +238,22 @@ export interface NexusGenArgTypes {
       name: string; // String!
       password: string; // String!
       username: string; // String!
+    }
+    unfollow: { // args
+      id: string; // String!
+    }
+    unlike: { // args
+      postId: string; // String!
+    }
+    updateComment: { // args
+      content: string; // String!
+      id: string; // String!
+    }
+    updatePost: { // args
+      description?: string | null; // String
+      id: string; // String!
+      isPrivate?: boolean | null; // Boolean
+      url: string; // String!
     }
   }
   Query: {
