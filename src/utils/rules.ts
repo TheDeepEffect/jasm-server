@@ -55,43 +55,32 @@ export const rules = {
             } catch (e) {
                 return e
             }
-        }),
-    isFollower: rule({ cache: "contextual" })(
-        async (parent, args, ctx: Context) => {
-            try {
-                const followings = await ctx.prisma.user.findUnique({
-                    where: { id: ctx?.userId },
-                    select: { following: { where: { followTo: parent.authorId } } }
-                })
-                if (followings?.following?.length) {
-                    return true;
-                } else {
-                    return new Error("Follow to see this content")
-                }
-            } catch (e) {
-                return e;
-            }
-        }
-    ),
-    isPublicPost: rule({ cache: "contextual" })(
-        (parent) => {
-            if (!parent?.isPrivate) {
-                return true;
-            } else {
-                return new Error("Post is private")
-            }
-        }
-    )
+        })
 }
 
 export const permissions = shield({
     Query: {
         feed: rules.isAuthenticatedUser,
-        users: rules.isAuthenticatedUser
+        users: rules.isAuthenticatedUser,
+        post: rules.isAuthenticatedUser,
+
     },
     Mutation: {
         createPost: rules.isAuthenticatedUser,
         deletePost: and(rules.isAuthenticatedUser, rules.isPostOwner),
         updatePost: and(rules.isAuthenticatedUser, rules.isPostOwner),
-    }
+        follow: rules.isAuthenticatedUser,
+        unfollow: and(rules.isAuthenticatedUser, rules.isFollowOwner),
+        like: rules.isAuthenticatedUser,
+        unlike: and(rules.isAuthenticatedUser, rules.isLikeOwner),
+        addComment: rules.isAuthenticatedUser,
+        updateComment: and(rules.isAuthenticatedUser, rules.isCommentOwner),
+        deleteComment: and(rules.isAuthenticatedUser, rules.isCommentOwner)
+    },
+    // Subscription: {
+    //     latestPost: rules.isAuthenticatedUser,
+    //     latestLike: rules.isAuthenticatedUser,
+    //     latestComment: rules.isAuthenticatedUser,
+    //     newFollow: rules.isAuthenticatedUser
+    // }
 })
