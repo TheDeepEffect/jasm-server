@@ -7,11 +7,14 @@ import { schema } from "./schema";
 import { ALLOWED_URL, isDev } from "./utils/constants";
 import { createContext } from "./utils/helpers";
 import cors from "cors";
+import { applyMiddleware } from 'graphql-middleware';
+
 // for subscription
 import express from "express";
 import { createServer } from 'http';
 import { execute, subscribe } from 'graphql';
 import { SubscriptionServer } from 'subscriptions-transport-ws';
+import { permissions } from './utils/rules';
 
 const httpHeadersPlugin = require("apollo-server-plugin-http-headers");
 var cookieParser = require('cookie-parser')
@@ -32,7 +35,7 @@ export async function startServer(PORT: string | number) {
 
     const server = new ApolloServer({
         plugins: [httpHeadersPlugin],
-        schema: schema,
+        schema: applyMiddleware(schema, permissions),
         context: createContext,
         introspection: true,
         debug: isDev(),
@@ -42,9 +45,16 @@ export async function startServer(PORT: string | number) {
     server.applyMiddleware({ app });
 
     const subscriptionServer = SubscriptionServer.create({
-        schema,
+        schema: applyMiddleware(schema, permissions),
         execute,
-        subscribe
+        subscribe,
+        onConnect: (_params: any, _ws: any, ctx: any) => {
+            const context = createContext(ctx)
+            return context;
+        },
+        onDisconnect() {
+            console.log('Disconnected!')
+        },
     }, {
         server: httpServer,
         path: server.graphqlPath

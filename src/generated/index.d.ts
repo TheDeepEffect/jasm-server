@@ -53,9 +53,16 @@ export interface NexusGenObjects {
     message: string; // String!
   }
   Like: prisma.Like;
+  LogoutFailed: { // root type
+    message: string; // String!
+  }
+  LogoutSuccess: { // root type
+    message: string; // String!
+  }
   Mutation: {};
   Post: prisma.Post;
   Query: {};
+  Subscription: {};
   User: prisma.User;
   UserAlreadyExists: { // root type
     message: string; // String!
@@ -67,6 +74,7 @@ export interface NexusGenInterfaces {
 
 export interface NexusGenUnions {
   LoginResult: NexusGenRootTypes['AuthPayload'] | NexusGenRootTypes['InvalidUser'];
+  LogoutResult: NexusGenRootTypes['LogoutFailed'] | NexusGenRootTypes['LogoutSuccess'];
   SignupResult: NexusGenRootTypes['AuthPayload'] | NexusGenRootTypes['UserAlreadyExists'];
 }
 
@@ -97,6 +105,12 @@ export interface NexusGenFieldTypes {
     post: NexusGenRootTypes['Post'] | null; // Post
     user: NexusGenRootTypes['User'] | null; // User
   }
+  LogoutFailed: { // field return type
+    message: string; // String!
+  }
+  LogoutSuccess: { // field return type
+    message: string; // String!
+  }
   Mutation: { // field return type
     addComment: NexusGenRootTypes['Comment'] | null; // Comment
     createPost: NexusGenRootTypes['Post'] | null; // Post
@@ -105,6 +119,7 @@ export interface NexusGenFieldTypes {
     follow: NexusGenRootTypes['Follow'] | null; // Follow
     like: NexusGenRootTypes['Like'] | null; // Like
     login: NexusGenRootTypes['LoginResult'] | null; // LoginResult
+    logout: NexusGenRootTypes['LogoutResult'] | null; // LogoutResult
     signup: NexusGenRootTypes['SignupResult'] | null; // SignupResult
     unfollow: NexusGenRootTypes['Follow'] | null; // Follow
     unlike: NexusGenRootTypes['Like'] | null; // Like
@@ -113,9 +128,11 @@ export interface NexusGenFieldTypes {
   }
   Post: { // field return type
     author: NexusGenRootTypes['User'] | null; // User
+    comments: Array<NexusGenRootTypes['Comment'] | null> | null; // [Comment]
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
     description: string | null; // String
     id: string | null; // ID
+    isPrivate: boolean | null; // Boolean
     likes: Array<NexusGenRootTypes['Like'] | null> | null; // [Like]
     updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
     url: string | null; // String
@@ -124,6 +141,12 @@ export interface NexusGenFieldTypes {
     feed: Array<NexusGenRootTypes['Post'] | null> | null; // [Post]
     post: NexusGenRootTypes['Post'] | null; // Post
     users: Array<NexusGenRootTypes['User'] | null>; // [User]!
+  }
+  Subscription: { // field return type
+    latestComment: NexusGenRootTypes['Comment'] | null; // Comment
+    latestLike: NexusGenRootTypes['Like'] | null; // Like
+    latestPost: NexusGenRootTypes['Post'] | null; // Post
+    newFollow: NexusGenRootTypes['Follow'] | null; // Follow
   }
   User: { // field return type
     comments: Array<NexusGenRootTypes['Comment'] | null> | null; // [Comment]
@@ -163,6 +186,12 @@ export interface NexusGenFieldTypeNames {
     post: 'Post'
     user: 'User'
   }
+  LogoutFailed: { // field return type name
+    message: 'String'
+  }
+  LogoutSuccess: { // field return type name
+    message: 'String'
+  }
   Mutation: { // field return type name
     addComment: 'Comment'
     createPost: 'Post'
@@ -171,6 +200,7 @@ export interface NexusGenFieldTypeNames {
     follow: 'Follow'
     like: 'Like'
     login: 'LoginResult'
+    logout: 'LogoutResult'
     signup: 'SignupResult'
     unfollow: 'Follow'
     unlike: 'Like'
@@ -179,9 +209,11 @@ export interface NexusGenFieldTypeNames {
   }
   Post: { // field return type name
     author: 'User'
+    comments: 'Comment'
     createdAt: 'DateTime'
     description: 'String'
     id: 'ID'
+    isPrivate: 'Boolean'
     likes: 'Like'
     updatedAt: 'DateTime'
     url: 'String'
@@ -190,6 +222,12 @@ export interface NexusGenFieldTypeNames {
     feed: 'Post'
     post: 'Post'
     users: 'User'
+  }
+  Subscription: { // field return type name
+    latestComment: 'Comment'
+    latestLike: 'Like'
+    latestPost: 'Post'
+    newFollow: 'Follow'
   }
   User: { // field return type name
     comments: 'Comment'
@@ -268,6 +306,7 @@ export interface NexusGenArgTypes {
 
 export interface NexusGenAbstractTypeMembers {
   LoginResult: "AuthPayload" | "InvalidUser"
+  LogoutResult: "LogoutFailed" | "LogoutSuccess"
   SignupResult: "AuthPayload" | "UserAlreadyExists"
 }
 
@@ -288,7 +327,7 @@ export type NexusGenUnionNames = keyof NexusGenUnions;
 
 export type NexusGenObjectsUsingAbstractStrategyIsTypeOf = never;
 
-export type NexusGenAbstractsUsingStrategyResolveType = "LoginResult" | "SignupResult";
+export type NexusGenAbstractsUsingStrategyResolveType = "LoginResult" | "LogoutResult" | "SignupResult";
 
 export type NexusGenFeaturesConfig = {
   abstractTypeStrategies: {

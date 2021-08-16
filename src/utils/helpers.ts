@@ -2,11 +2,11 @@ import { PrismaClient } from "@prisma/client"
 import { PubSub } from "graphql-subscriptions";
 import { Context, cookie, Token } from "../types";
 import { APP_SECRET, errors, Errors, tokens } from "./constants";
+import { sign, verify } from 'jsonwebtoken';
+
+
 export const prisma = new PrismaClient()
 const pubsub = new PubSub()
-import { sign, verify } from 'jsonwebtoken';
-import { CookieOptions } from "express";
-
 
 export const generateAccessToken = (userId: string) => {
   const accessToken = sign(
@@ -44,15 +44,9 @@ export const createContext = (ctx: any): Context => {
   let userId: string;
   try {
     let Authorization = ''
-    try {
-      // For queries and mutations
-      Authorization = ctx.req.cookies?.['Token'];
-    } catch (e) {
-      // specifically for subscriptions as the above will fail
-      // TODO : WS cookie setup here
-      Authorization = ctx?.connection?.context?.Authorization
-    }
+    Authorization = ctx.req.cookies?.['Token'];
     const token = Authorization
+
     const verifiedToken = verify(token, APP_SECRET) as Token
     if (!verifiedToken.userId && verifiedToken.type !== tokens.access.name)
       userId = ""

@@ -6,13 +6,13 @@ export const comment = extendType({
         t.field("addComment", {
             type: "Comment",
             args: { content: nonNull(stringArg()), postId: nonNull(stringArg()) },
-            resolve(_, args, ctx) {
+            async resolve(_, args, ctx) {
                 const data = {
                     content: args.content,
                     post: { connect: { id: args.postId } },
                     user: { connect: { id: ctx.userId } },
                 };
-                const newComment = ctx.prisma.comment.create({ data });
+                const newComment = await ctx.prisma.comment.create({ data });
                 ctx.pubsub.publish("latestComment", newComment);
                 return newComment;
             }
@@ -23,8 +23,8 @@ export const comment = extendType({
                 id: nonNull(stringArg()),
                 content: nonNull(stringArg()),
             },
-            resolve(_, args, ctx) {
-                return ctx.prisma.comment.update({
+            async resolve(_, args, ctx) {
+                return await ctx.prisma.comment.update({
                     where: { id: args.id },
                     data: {
                         content: args.content
@@ -35,8 +35,8 @@ export const comment = extendType({
         t.field("deleteComment", {
             type: "Comment",
             args: { id: nonNull(stringArg()) },
-            resolve(_, args, ctx) {
-                return ctx.prisma.comment.delete({ where: { id: args.id } })
+            async resolve(_, args, ctx) {
+                return await ctx.prisma.comment.delete({ where: { id: args.id } })
             }
         })
     }

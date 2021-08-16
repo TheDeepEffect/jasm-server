@@ -6,11 +6,11 @@ export const user = extendType({
     t.nonNull.list.field('users', {
       type: 'User',
       args: { filter: stringArg() },
-      resolve(_, args, ctx) {
+      async resolve(_, args, ctx) {
         if (args?.filter) {
-          return ctx.prisma.user.findMany({ where: { username: args.filter } })
+          return await ctx.prisma.user.findMany({ where: { username: args.filter } })
         }
-        return ctx.prisma.user.findMany()
+        return await ctx.prisma.user.findMany()
       },
     })
   },

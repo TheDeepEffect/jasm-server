@@ -18,6 +18,10 @@ export const errors = {
     __typename: 'UserAlreadyExists',
     message: 'User already exists!',
   },
+  logoutFailed: {
+    __typename: 'LogoutFailed',
+    message: "Logout failed"
+  }
 }
 
 export type Errors = typeof errors

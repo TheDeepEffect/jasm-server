@@ -1,5 +1,6 @@
 import { asNexusMethod, objectType, unionType } from "nexus";
 import { DateTimeResolver } from "graphql-scalars";
+import { resolve } from "path/posix";
 /* tslint:disable */
 export const GQLDate = asNexusMethod(DateTimeResolver, "date");
 
@@ -11,10 +12,15 @@ export const Post = objectType({
     t.date("createdAt");
     t.date("updatedAt");
     t.string("description");
+    t.boolean("isPrivate", {
+      resolve(post, _, ctx) {
+        return post.isPrivate
+      }
+    });
     t.field("author", {
       type: "User",
-      resolve(post, _, ctx) {
-        return ctx.prisma.post
+      async resolve(post, _, ctx) {
+        return await ctx.prisma.post
           .findFirst({
             where: {
               id: post.id,
@@ -25,13 +31,19 @@ export const Post = objectType({
     });
     t.list.field("likes", {
       type: "Like",
-      resolve(post, _, ctx) {
-        return ctx.prisma.post
+      async resolve(post, _, ctx) {
+        return await ctx.prisma.post
           .findFirst({
             where: { id: post.id },
           })
           .likes();
       },
+    });
+    t.list.field("comments", {
+      type: 'Comment',
+      async resolve(post, _, ctx) {
+        return await ctx.prisma.post.findFirst({ where: { id: post.id } }).comments();
+      }
     });
   },
 });
@@ -46,20 +58,20 @@ export const User = objectType({
     t.date("createdAt");
     t.list.field("posts", {
       type: "Post",
-      resolve(user, _, ctx) {
-        return ctx.prisma.user.findFirst({ where: { id: user.id } }).posts();
+      async resolve(user, _, ctx) {
+        return await ctx.prisma.user.findFirst({ where: { id: user.id } }).posts();
       },
     });
     t.list.field("comments", {
       type: 'Comment',
-      resolve(user, _, ctx) {
-        return ctx.prisma.user.findFirst({ where: { id: user.id } }).comments();
+      async resolve(user, _, ctx) {
+        return await ctx.prisma.user.findFirst({ where: { id: user.id } }).comments();
       }
     });
     t.list.field("likes", {
       type: 'Like',
-      resolve(user, _, ctx) {
-        return ctx.prisma.user.findFirst({ where: { id: user.id } }).likedPosts();
+      async resolve(user, _, ctx) {
+        return await ctx.prisma.user.findFirst({ where: { id: user.id } }).likedPosts();
       }
     })
   },
@@ -71,14 +83,14 @@ export const Like = objectType({
     t.id("id");
     t.field("post", {
       type: "Post",
-      resolve(like, _, ctx) {
-        return ctx.prisma.like.findFirst({ where: { id: like.id } }).post();
+      async resolve(like, _, ctx) {
+        return await ctx.prisma.like.findFirst({ where: { id: like.id } }).post();
       },
     });
     t.field("user", {
       type: "User",
-      resolve(like, _, ctx) {
-        return ctx.prisma.like.findFirst({ where: { id: like.id } }).user();
+      async resolve(like, _, ctx) {
+        return await ctx.prisma.like.findFirst({ where: { id: like.id } }).user();
       },
     });
   },
@@ -90,14 +102,14 @@ export const Comment = objectType({
     t.string("content");
     t.field("post", {
       type: "Post",
-      resolve(comment, _, ctx) {
-        return ctx.prisma.comment.findFirst({ where: { id: comment.id } }).post();
+      async resolve(comment, _, ctx) {
+        return await ctx.prisma.comment.findFirst({ where: { id: comment.id } }).post();
       },
     });
     t.field("user", {
       type: "User",
-      resolve(comment, _, ctx) {
-        return ctx.prisma.comment.findFirst({ where: { id: comment.id } }).user();
+      async resolve(comment, _, ctx) {
+        return await ctx.prisma.comment.findFirst({ where: { id: comment.id } }).user();
       },
     });
   }
@@ -108,14 +120,14 @@ export const Follow = objectType({
     t.id("id");
     t.field("followToUser", {
       type: "User",
-      resolve(follow, _, ctx) {
-        return ctx.prisma.follow.findFirst({ where: { id: follow.id } }).followToUser()
+      async resolve(follow, _, ctx) {
+        return await ctx.prisma.follow.findFirst({ where: { id: follow.id } }).followToUser()
       }
     })
     t.field("followByUser", {
       type: "User",
-      resolve(follow, _, ctx) {
-        return ctx.prisma.follow.findFirst({ where: { id: follow.id } }).followByUser()
+      async resolve(follow, _, ctx) {
+        return await ctx.prisma.follow.findFirst({ where: { id: follow.id } }).followByUser()
       }
     })
   }
@@ -160,4 +172,28 @@ export const SignupResult = unionType({
     // @ts-ignore
     return t.__typename
   },
+});
+
+export const logoutFailedError = objectType({
+  name: 'LogoutFailed',
+  definition(t) {
+    t.nonNull.string("message");
+  }
+})
+export const LogoutSuccess = objectType({
+  name: "LogoutSuccess",
+  definition(t) {
+    t.nonNull.string("message");
+  }
+})
+
+export const LogoutResult = unionType({
+  name: "LogoutResult",
+  definition(t) {
+    t.members("LogoutSuccess", "LogoutFailed")
+  },
+  resolveType(t) {
+    // @ts-ignore
+    return t.__typename
+  }
 })

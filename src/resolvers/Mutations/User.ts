@@ -1,6 +1,7 @@
 import { extendType, nonNull, stringArg } from "nexus";
-import { hash } from "bcrypt";
-import { generateAccessToken, generateCookie, returnError } from "../../utils/helpers";
+import { compare, hash } from "bcrypt";
+import { generateCookie, returnError } from "../../utils/helpers";
+import { Context } from "../../types";
 export const user = extendType({
     type: 'Mutation',
     definition(t) {
@@ -49,6 +50,9 @@ export const user = extendType({
                     return returnError('invalidUser');
                 }
                 if (!user) return returnError('invalidUser');
+                const passwordValid = await compare(password, user.password)
+                if (!passwordValid) return returnError('invalidUser')
+
                 const cookie = generateCookie(user.id);
                 ctx.setCookies.push(cookie);
                 return {
@@ -56,6 +60,22 @@ export const user = extendType({
                     user
                 }
             }
+        });
+        t.field("logout", {
+            type: "LogoutResult",
+            resolve(parent, args, ctx: Context) {
+                try {
+                    //  @ts-ignore
+                    ctx.res.clearCookie("Token")
+                    return {
+                        __typename: "LogoutSuccess",
+                        message: "Success"
+                    }
+                } catch (e) {
+                    return returnError("logoutFailed")
+                }
+            }
+
         })
     }
 })

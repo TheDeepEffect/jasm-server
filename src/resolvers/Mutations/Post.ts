@@ -6,14 +6,14 @@ export const post = extendType({
         t.field("createPost", {
             type: "Post",
             args: { description: stringArg(), url: nonNull(stringArg()), isPrivate: booleanArg() },
-            resolve(_, args, ctx) {
+            async resolve(_, args, ctx) {
                 const data = {
                     ...args,
                     author: {
                         connect: { id: ctx.userId }
                     }
                 }
-                const newPost = ctx.prisma.post.create({ data });
+                const newPost = await ctx.prisma.post.create({ data });
                 ctx.pubsub.publish('latestPost', newPost);
                 return newPost;
             }
@@ -21,8 +21,8 @@ export const post = extendType({
         t.field("deletePost", {
             type: "Post",
             args: { id: nonNull(stringArg()) },
-            resolve(_, args, ctx) {
-                return ctx.prisma.post.delete({ where: { id: args.id } })
+            async resolve(_, args, ctx) {
+                return await ctx.prisma.post.delete({ where: { id: args.id } })
             }
         })
         t.field("updatePost", {
@@ -33,9 +33,9 @@ export const post = extendType({
                 url: nonNull(stringArg()),
                 isPrivate: booleanArg()
             },
-            resolve(_, args, ctx) {
+            async resolve(_, args, ctx) {
                 const { id, ...rest } = args;
-                return ctx.prisma.post.update({
+                return await ctx.prisma.post.update({
                     where: { id },
                     data: {
                         ...rest

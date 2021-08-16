@@ -36,6 +36,16 @@ type Like {
 
 union LoginResult = AuthPayload | InvalidUser
 
+type LogoutFailed {
+  message: String!
+}
+
+union LogoutResult = LogoutFailed | LogoutSuccess
+
+type LogoutSuccess {
+  message: String!
+}
+
 type Mutation {
   addComment(content: String!, postId: String!): Comment
   createPost(description: String, isPrivate: Boolean, url: String!): Post
@@ -44,6 +54,7 @@ type Mutation {
   follow(userToId: String!): Follow
   like(postId: String!): Like
   login(password: String!, username: String!): LoginResult
+  logout: LogoutResult
   signup(email: String!, name: String!, password: String!, username: String!): SignupResult
   unfollow(id: String!): Follow
   unlike(postId: String!): Like
@@ -53,9 +64,11 @@ type Mutation {
 
 type Post {
   author: User
+  comments: [Comment]
   createdAt: DateTime
   description: String
   id: ID
+  isPrivate: Boolean
   likes: [Like]
   updatedAt: DateTime
   url: String
@@ -68,6 +81,13 @@ type Query {
 }
 
 union SignupResult = AuthPayload | UserAlreadyExists
+
+type Subscription {
+  latestComment: Comment
+  latestLike: Like
+  latestPost: Post
+  newFollow: Follow
+}
 
 type User {
   comments: [Comment]

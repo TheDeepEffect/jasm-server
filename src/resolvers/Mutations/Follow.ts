@@ -6,12 +6,12 @@ export const follow = extendType({
         t.field("follow", {
             type: "Follow",
             args: { userToId: nonNull(stringArg()) },
-            resolve(_, args, ctx) {
+            async resolve(_, args, ctx) {
                 const data = {
                     followToUser: { connect: { id: args.userToId } },
                     followByUser: { connect: { id: ctx.userId } }
                 }
-                const newFollow = ctx.prisma.follow.create({ data });
+                const newFollow = await ctx.prisma.follow.create({ data });
                 ctx.pubsub.publish("newFollow", newFollow);
                 return newFollow;
             }
@@ -19,8 +19,8 @@ export const follow = extendType({
         t.field("unfollow", {
             type: "Follow",
             args: { id: nonNull(stringArg()) },
-            resolve(_, args, ctx) {
-                return ctx.prisma.follow.delete({ where: { id: args.id } })
+            async resolve(_, args, ctx) {
+                return await ctx.prisma.follow.delete({ where: { id: args.id } })
             }
         })
     }

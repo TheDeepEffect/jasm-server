@@ -60,4 +60,6 @@ model Follow {
   followToUser User   @relation("following", fields: [followTo], references: [id])
   followBy     String
   followByUser User   @relation("followers", fields: [followBy], references: [id])
+
+  @@unique([followBy, followTo])
 }
