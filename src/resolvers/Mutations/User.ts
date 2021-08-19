@@ -65,8 +65,9 @@ export const user = extendType({
             type: "LogoutResult",
             resolve(parent, args, ctx: Context) {
                 try {
-                    //  @ts-ignore
-                    ctx.res.clearCookie("Token")
+                    const cookie = generateCookie(ctx.userId);
+                    cookie.options.maxAge = 0;
+                    ctx.setCookies.push(cookie)
                     return {
                         __typename: "LogoutSuccess",
                         message: "Success"

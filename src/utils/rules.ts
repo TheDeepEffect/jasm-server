@@ -77,10 +77,4 @@ export const permissions = shield({
         updateComment: and(rules.isAuthenticatedUser, rules.isCommentOwner),
         deleteComment: and(rules.isAuthenticatedUser, rules.isCommentOwner)
     },
-    // Subscription: {
-    //     latestPost: rules.isAuthenticatedUser,
-    //     latestLike: rules.isAuthenticatedUser,
-    //     latestComment: rules.isAuthenticatedUser,
-    //     newFollow: rules.isAuthenticatedUser
-    // }
 })

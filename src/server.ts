@@ -48,8 +48,12 @@ export async function startServer(PORT: string | number) {
         schema: applyMiddleware(schema, permissions),
         execute,
         subscribe,
-        onConnect: (_params: any, _ws: any, ctx: any) => {
-            const context = createContext(ctx)
+        onConnect: (params: any, ws: any, ctx: any) => {
+            const context = createContext({
+                ...params,
+                ...ws,
+                ...ctx
+            })
             return context;
         },
         onDisconnect() {
