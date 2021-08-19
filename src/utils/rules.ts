@@ -75,6 +75,7 @@ export const permissions = shield({
         unlike: and(rules.isAuthenticatedUser, rules.isLikeOwner),
         addComment: rules.isAuthenticatedUser,
         updateComment: and(rules.isAuthenticatedUser, rules.isCommentOwner),
-        deleteComment: and(rules.isAuthenticatedUser, rules.isCommentOwner)
+        deleteComment: and(rules.isAuthenticatedUser, rules.isCommentOwner),
+        logout: rules.isAuthenticatedUser
     },
 })
