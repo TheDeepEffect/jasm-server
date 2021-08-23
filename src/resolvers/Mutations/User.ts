@@ -12,13 +12,15 @@ export const user = extendType({
                 username: nonNull(stringArg()),
                 email: nonNull(stringArg()),
                 password: nonNull(stringArg()),
+                profile_pic: stringArg()
             },
-            async resolve(parent, { name, username, password, email }, ctx) {
+            async resolve(parent, { name, username, password, email, profile_pic }, ctx) {
                 try {
                     const hashedPassword = await hash(password, 10);
                     const user = await ctx.prisma.user.create({
                         data: {
-                            name, username, email, password: hashedPassword
+                            name, username, email, password: hashedPassword,
+                            profile_pic
                         }
                     });
                     const cookie = generateCookie(user.id);

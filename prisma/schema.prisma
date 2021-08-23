@@ -11,17 +11,18 @@ generator client {
 }
 
 model User {
-  id         String    @id @default(cuid())
-  createdAt  DateTime  @default(now())
-  name       String
-  username   String    @unique
-  email      String    @unique
-  password   String
-  posts      Post[]
-  likedPosts Like[]
-  comments   Comment[]
-  following  Follow[]  @relation("following")
-  followers  Follow[]  @relation("followers")
+  id          String    @id @default(cuid())
+  createdAt   DateTime  @default(now())
+  name        String
+  username    String    @unique
+  email       String    @unique
+  profile_pic String?
+  password    String
+  posts       Post[]
+  likedPosts  Like[]
+  comments    Comment[]
+  following   Follow[]  @relation("following")
+  followers   Follow[]  @relation("followers")
 }
 
 model Like {

@@ -156,6 +156,7 @@ export interface NexusGenFieldTypes {
     likes: Array<NexusGenRootTypes['Like'] | null> | null; // [Like]
     name: string | null; // String
     posts: Array<NexusGenRootTypes['Post'] | null> | null; // [Post]
+    profile_pic: string | null; // String
     username: string | null; // String
   }
   UserAlreadyExists: { // field return type
@@ -237,6 +238,7 @@ export interface NexusGenFieldTypeNames {
     likes: 'Like'
     name: 'String'
     posts: 'Post'
+    profile_pic: 'String'
     username: 'String'
   }
   UserAlreadyExists: { // field return type name
@@ -275,6 +277,7 @@ export interface NexusGenArgTypes {
       email: string; // String!
       name: string; // String!
       password: string; // String!
+      profile_pic?: string | null; // String
       username: string; // String!
     }
     unfollow: { // args

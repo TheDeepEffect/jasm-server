@@ -55,7 +55,7 @@ type Mutation {
   like(postId: String!): Like
   login(password: String!, username: String!): LoginResult
   logout: LogoutResult
-  signup(email: String!, name: String!, password: String!, username: String!): SignupResult
+  signup(email: String!, name: String!, password: String!, profile_pic: String, username: String!): SignupResult
   unfollow(id: String!): Follow
   unlike(postId: String!): Like
   updateComment(content: String!, id: String!): Comment
@@ -97,6 +97,7 @@ type User {
   likes: [Like]
   name: String
   posts: [Post]
+  profile_pic: String
   username: String
 }
 

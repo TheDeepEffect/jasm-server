@@ -55,6 +55,7 @@ export const User = objectType({
     t.string("name");
     t.string("email");
     t.string("username");
+    t.string("profile_pic");
     t.date("createdAt");
     t.list.field("posts", {
       type: "Post",
