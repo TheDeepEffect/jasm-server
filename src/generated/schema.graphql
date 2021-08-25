@@ -60,6 +60,7 @@ type Mutation {
   unlike(postId: String!): Like
   updateComment(content: String!, id: String!): Comment
   updatePost(description: String, id: String!, isPrivate: Boolean, url: String!): Post
+  updateUser(email: String, name: String, password: String, profile_pic: String, username: String): User
 }
 
 type Post {
@@ -93,6 +94,8 @@ type User {
   comments: [Comment]
   createdAt: DateTime
   email: String
+  followers: [Follow]
+  following: [Follow]
   id: ID
   likes: [Like]
   name: String

@@ -74,7 +74,19 @@ export const User = objectType({
       async resolve(user, _, ctx) {
         return await ctx.prisma.user.findFirst({ where: { id: user.id } }).likedPosts();
       }
-    })
+    });
+    t.list.field("followers", {
+      type: "Follow",
+      async resolve(user, _, ctx) {
+        return await ctx.prisma.user.findFirst({ where: { id: user.id } }).followers()
+      }
+    });
+    t.list.field("following", {
+      type: "Follow",
+      async resolve(user, _, ctx) {
+        return await ctx.prisma.user.findFirst({ where: { id: user.id } }).following()
+      }
+    });
   },
 });
 

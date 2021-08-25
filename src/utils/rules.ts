@@ -55,7 +55,7 @@ export const rules = {
             } catch (e) {
                 return e
             }
-        })
+        }),
 }
 
 export const permissions = shield({
@@ -76,6 +76,7 @@ export const permissions = shield({
         addComment: rules.isAuthenticatedUser,
         updateComment: and(rules.isAuthenticatedUser, rules.isCommentOwner),
         deleteComment: and(rules.isAuthenticatedUser, rules.isCommentOwner),
-        logout: rules.isAuthenticatedUser
+        logout: rules.isAuthenticatedUser,
+        updateUser: rules.isAuthenticatedUser
     },
 })

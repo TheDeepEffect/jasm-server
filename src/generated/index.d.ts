@@ -125,6 +125,7 @@ export interface NexusGenFieldTypes {
     unlike: NexusGenRootTypes['Like'] | null; // Like
     updateComment: NexusGenRootTypes['Comment'] | null; // Comment
     updatePost: NexusGenRootTypes['Post'] | null; // Post
+    updateUser: NexusGenRootTypes['User'] | null; // User
   }
   Post: { // field return type
     author: NexusGenRootTypes['User'] | null; // User
@@ -152,6 +153,8 @@ export interface NexusGenFieldTypes {
     comments: Array<NexusGenRootTypes['Comment'] | null> | null; // [Comment]
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
     email: string | null; // String
+    followers: Array<NexusGenRootTypes['Follow'] | null> | null; // [Follow]
+    following: Array<NexusGenRootTypes['Follow'] | null> | null; // [Follow]
     id: string | null; // ID
     likes: Array<NexusGenRootTypes['Like'] | null> | null; // [Like]
     name: string | null; // String
@@ -207,6 +210,7 @@ export interface NexusGenFieldTypeNames {
     unlike: 'Like'
     updateComment: 'Comment'
     updatePost: 'Post'
+    updateUser: 'User'
   }
   Post: { // field return type name
     author: 'User'
@@ -234,6 +238,8 @@ export interface NexusGenFieldTypeNames {
     comments: 'Comment'
     createdAt: 'DateTime'
     email: 'String'
+    followers: 'Follow'
+    following: 'Follow'
     id: 'ID'
     likes: 'Like'
     name: 'String'
@@ -295,6 +301,13 @@ export interface NexusGenArgTypes {
       id: string; // String!
       isPrivate?: boolean | null; // Boolean
       url: string; // String!
+    }
+    updateUser: { // args
+      email?: string | null; // String
+      name?: string | null; // String
+      password?: string | null; // String
+      profile_pic?: string | null; // String
+      username?: string | null; // String
     }
   }
   Query: {

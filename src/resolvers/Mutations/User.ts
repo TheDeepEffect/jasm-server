@@ -79,6 +79,35 @@ export const user = extendType({
                 }
             }
 
-        })
+        });
+        t.field('updateUser', {
+            type: 'User',
+            args: {
+                name: stringArg(),
+                username: stringArg(),
+                email: stringArg(),
+                password: stringArg(),
+                profile_pic: stringArg()
+            },
+            async resolve(parent, { name, username, password, email, profile_pic }, ctx) {
+                let hashedPassword;
+                if (password) {
+                    hashedPassword = await hash(password, 10);
+                }
+
+                const user = await ctx.prisma.user.update({
+                    data: {
+                        email: email || undefined,
+                        name: name || undefined,
+                        username: username || undefined,
+                        profile_pic: profile_pic || undefined,
+                        password: hashedPassword || undefined
+                    },
+                    where: { id: ctx.userId }
+                });
+                return user
+
+            }
+        });
     }
 })
