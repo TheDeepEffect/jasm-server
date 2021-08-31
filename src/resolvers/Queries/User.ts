@@ -3,7 +3,7 @@ import { extendType, stringArg } from "nexus";
 export const user = extendType({
   type: 'Query',
   definition(t) {
-    t.nonNull.list.field('users', {
+    t.list.field('users', {
       type: 'User',
       args: { filter: stringArg() },
       async resolve(_, args, ctx) {
@@ -20,6 +20,6 @@ export const user = extendType({
         }
         return await ctx.prisma.user.findMany()
       },
-    })
+    });
   },
 })
