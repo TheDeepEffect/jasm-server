@@ -45,6 +45,7 @@ export interface NexusGenScalars {
 
 export interface NexusGenObjects {
   AuthPayload: { // root type
+    expiresAt?: string | null; // String
     user?: NexusGenRootTypes['User'] | null; // User
   }
   Comment: prisma.Comment;
@@ -84,6 +85,7 @@ export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
 
 export interface NexusGenFieldTypes {
   AuthPayload: { // field return type
+    expiresAt: string | null; // String
     user: NexusGenRootTypes['User'] | null; // User
   }
   Comment: { // field return type
@@ -141,7 +143,7 @@ export interface NexusGenFieldTypes {
   Query: { // field return type
     feed: Array<NexusGenRootTypes['Post'] | null> | null; // [Post]
     post: NexusGenRootTypes['Post'] | null; // Post
-    users: Array<NexusGenRootTypes['User'] | null>; // [User]!
+    users: Array<NexusGenRootTypes['User'] | null> | null; // [User]
   }
   Subscription: { // field return type
     latestComment: NexusGenRootTypes['Comment'] | null; // Comment
@@ -169,6 +171,7 @@ export interface NexusGenFieldTypes {
 
 export interface NexusGenFieldTypeNames {
   AuthPayload: { // field return type name
+    expiresAt: 'String'
     user: 'User'
   }
   Comment: { // field return type name

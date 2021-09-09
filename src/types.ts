@@ -7,6 +7,10 @@ export type cookie = {
   value: string,
   options: CookieOptions
 }
+export type generateCookieType = {
+  cookie: cookie,
+  expiresAt: string
+}
 export interface Context {
   prisma: PrismaClient
   pubsub: PubSub

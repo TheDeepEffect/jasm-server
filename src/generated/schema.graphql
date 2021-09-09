@@ -3,6 +3,7 @@
 
 
 type AuthPayload {
+  expiresAt: String
   user: User
 }
 
@@ -78,7 +79,7 @@ type Post {
 type Query {
   feed: [Post]
   post(id: String!): Post
-  users(filter: String): [User]!
+  users(filter: String): [User]
 }
 
 union SignupResult = AuthPayload | UserAlreadyExists

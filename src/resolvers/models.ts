@@ -149,7 +149,8 @@ export const Follow = objectType({
 export const AuthPayload = objectType({
   name: 'AuthPayload',
   definition(t) {
-    t.field('user', { type: 'User' })
+    t.field('user', { type: 'User' });
+    t.string("expiresAt")
   },
 })
 

@@ -1,8 +1,9 @@
 import { PrismaClient } from "@prisma/client"
 import { PubSub } from "graphql-subscriptions";
-import { Context, cookie, Token } from "../types";
+import { Context, cookie, generateCookieType, Token } from "../types";
 import { APP_SECRET, errors, Errors, tokens } from "./constants";
 import { sign, verify } from 'jsonwebtoken';
+import jwtDecode from "jwt-decode";
 
 
 export const prisma = new PrismaClient()
@@ -22,9 +23,9 @@ export const generateAccessToken = (userId: string) => {
   )
   return accessToken
 };
-export const generateCookie = (userId: string): cookie => {
+export const generateCookie = (userId: string): generateCookieType => {
   const accessToken = generateAccessToken(userId);
-  return {
+  const cookie: cookie = {
     name: "Token",
     value: accessToken,
     options: {
@@ -34,6 +35,10 @@ export const generateCookie = (userId: string): cookie => {
       secure: true
     }
   }
+  const decodedToken = jwtDecode(accessToken);
+  // @ts-ignore
+  const expiresAt = decodedToken?.exp;
+  return { cookie, expiresAt }
 }
 
 export const returnError = (error: keyof Errors) => {

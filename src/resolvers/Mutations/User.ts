@@ -23,11 +23,12 @@ export const user = extendType({
                             profile_pic
                         }
                     });
-                    const cookie = generateCookie(user.id);
+                    const { cookie, expiresAt } = generateCookie(user.id);
                     ctx.setCookies.push(cookie);
                     return {
                         __typename: 'AuthPayload',
-                        user
+                        user,
+                        expiresAt
                     }
                 } catch (e) {
                     return returnError('userAlreadyExists');
@@ -55,11 +56,12 @@ export const user = extendType({
                 const passwordValid = await compare(password, user.password)
                 if (!passwordValid) return returnError('invalidUser')
 
-                const cookie = generateCookie(user.id);
+                const { cookie, expiresAt } = generateCookie(user.id);
                 ctx.setCookies.push(cookie);
                 return {
                     __typename: 'AuthPayload',
-                    user
+                    user,
+                    expiresAt
                 }
             }
         });
@@ -67,7 +69,7 @@ export const user = extendType({
             type: "LogoutResult",
             resolve(parent, args, ctx: Context) {
                 try {
-                    const cookie = generateCookie(ctx.userId);
+                    const { cookie } = generateCookie(ctx.userId);
                     cookie.options.maxAge = 0;
                     ctx.setCookies.push(cookie)
                     return {
