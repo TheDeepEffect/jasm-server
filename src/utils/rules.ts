@@ -1,58 +1,59 @@
 import { and, or, rule, shield } from "graphql-shield";
+import { IRuleResult } from "graphql-shield/dist/types";
 import { Context } from "../types";
 
 export const rules = {
     isAuthenticatedUser: rule({ cache: "contextual" })(
-        async (_parent, _args, ctx: Context) => {
+        (_parent, _args, ctx: Context): IRuleResult => {
             try {
                 if (ctx.userId) {
                     return true
                 } else {
                     return Error("Unauthenticated User");
                 }
-            } catch (e) {
-                return e;
+            } catch (e: any) {
+                return new Error(e);
             }
         }),
     isPostOwner: rule({ cache: "contextual" })(
-        async (_parent, args, ctx: Context) => {
+        async (_parent, args, ctx: Context): Promise<IRuleResult> => {
             const id = args?.where ? args?.where?.id : args.id;
             try {
                 const author = await ctx.prisma.post.findUnique({
                     where: { id }
                 }).author();
                 return ctx?.userId === author?.id
-            } catch (e) {
+            } catch (e: any) {
                 return e;
             }
         }),
     isCommentOwner: rule({ cache: "contextual" })(
-        async (_parent, args, ctx: Context) => {
+        async (_parent, args, ctx: Context): Promise<IRuleResult> => {
             const id = args.where ? args?.where?.id : args.id;
             try {
                 const author = await ctx.prisma.comment.findUnique({ where: { id } }).user();
                 return ctx?.userId === author?.id;
-            } catch (e) {
+            } catch (e: any) {
                 return e;
             }
         }),
     isLikeOwner: rule({ cache: "contextual" })(
-        async (_parents, args, ctx: Context) => {
+        async (_parents, args, ctx: Context): Promise<IRuleResult> => {
             const id = args.where ? args.where?.id : args?.id;
             try {
                 const author = await ctx.prisma.like.findUnique({ where: { id } }).user();
                 return ctx?.userId === author?.id
-            } catch (e) {
+            } catch (e: any) {
                 return e;
             }
         }),
     isFollowOwner: rule({ cache: "contextual" })(
-        async (_parent, args, ctx: Context) => {
+        async (_parent, args, ctx: Context): Promise<IRuleResult> => {
             const id = args.where ? args.where?.id : args?.id;
             try {
                 const author = await ctx.prisma.follow.findUnique({ where: { id } }).followByUser();
                 return ctx.userId === author?.id
-            } catch (e) {
+            } catch (e: any) {
                 return e
             }
         }),
