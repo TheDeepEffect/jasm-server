@@ -1,6 +1,6 @@
 import { extendType, nonNull, stringArg } from "nexus";
 import { compare, hash } from "bcrypt";
-import { generateCookie, returnError } from "../../utils/helpers";
+import { deleteImages, generateCookie, getImageData, returnError } from "../../utils/helpers";
 import { Context } from "../../types";
 export const user = extendType({
     type: 'Mutation',
@@ -17,10 +17,15 @@ export const user = extendType({
             async resolve(parent, { name, username, password, email, profile_pic }, ctx) {
                 try {
                     const hashedPassword = await hash(password, 10);
+                    let publicId = null;
+                    if (profile_pic) {
+                        const data = await getImageData(profile_pic)
+                        publicId = data.public_id;
+                    }
                     const user = await ctx.prisma.user.create({
                         data: {
                             name, username, email, password: hashedPassword,
-                            profile_pic
+                            profile_pic: publicId
                         }
                     });
                     const { cookie, expiresAt } = generateCookie(user.id);
@@ -96,13 +101,25 @@ export const user = extendType({
                 if (password) {
                     hashedPassword = await hash(password, 10);
                 }
-
+                let publicId = null;
+                if (profile_pic) {
+                    try {
+                        const currentUser = await ctx.prisma.user.findFirst({ where: { id: ctx.userId } });
+                        if (currentUser?.profile_pic) {
+                            await deleteImages([currentUser?.profile_pic]);
+                        }
+                        const data = await getImageData(profile_pic)
+                        publicId = data.public_id;
+                    } catch (e) {
+                        console.log(e)
+                    }
+                };
                 const user = await ctx.prisma.user.update({
                     data: {
                         email: email || undefined,
                         name: name || undefined,
                         username: username || undefined,
-                        profile_pic: profile_pic || undefined,
+                        profile_pic: publicId || undefined,
                         password: hashedPassword || undefined
                     },
                     where: { id: ctx.userId }

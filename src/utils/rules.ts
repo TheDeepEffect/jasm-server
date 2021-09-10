@@ -64,7 +64,6 @@ export const permissions = shield({
         feed: rules.isAuthenticatedUser,
         users: rules.isAuthenticatedUser,
         post: rules.isAuthenticatedUser,
-        signature: rules.isAuthenticatedUser,
     },
     Mutation: {
         createPost: rules.isAuthenticatedUser,

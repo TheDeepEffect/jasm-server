@@ -1,4 +1,5 @@
 import { booleanArg, extendType, nonNull, stringArg } from "nexus";
+import { deleteImages, getImageData } from "../../utils/helpers";
 
 export const post = extendType({
     type: "Mutation",
@@ -7,8 +8,11 @@ export const post = extendType({
             type: "Post",
             args: { description: stringArg(), url: nonNull(stringArg()), isPrivate: booleanArg() },
             async resolve(_, args, ctx) {
+                const { url } = args;
+                const publicId = (await getImageData(url)).public_id
                 const data = {
                     ...args,
+                    url: publicId,
                     author: {
                         connect: { id: ctx.userId }
                     }
@@ -22,6 +26,10 @@ export const post = extendType({
             type: "Post",
             args: { id: nonNull(stringArg()) },
             async resolve(_, args, ctx) {
+                const currentPost = await ctx.prisma.post.findFirst({ where: { id: args.id } })
+                if (currentPost) {
+                    await deleteImages([currentPost.url]);
+                }
                 return await ctx.prisma.post.delete({ where: { id: args.id } })
             }
         })
@@ -34,11 +42,18 @@ export const post = extendType({
                 isPrivate: booleanArg()
             },
             async resolve(_, args, ctx) {
-                const { id, ...rest } = args;
+                const { id, url, ...rest } = args;
+                const publicId = (await getImageData(url)).public_id
+                const currentPost = await ctx.prisma.post.findFirst({ where: { id } })
+                if (currentPost) {
+                    await deleteImages([currentPost.url]);
+                }
+
                 return await ctx.prisma.post.update({
                     where: { id },
                     data: {
-                        ...rest
+                        ...rest,
+                        url: publicId
                     }
                 })
             }

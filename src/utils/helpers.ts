@@ -4,6 +4,7 @@ import { Context, cookie, generateCookieType, Token } from "../types";
 import { APP_SECRET, errors, Errors, tokens } from "./constants";
 import { sign, verify } from 'jsonwebtoken';
 import jwtDecode from "jwt-decode";
+import { v2 } from "cloudinary";
 
 
 export const prisma = new PrismaClient()
@@ -67,4 +68,15 @@ export const createContext = (ctx: any): Context => {
     setHeaders: new Array(),
     userId
   }
+}
+
+export const getImageData = async (file: string) => {
+  const response = await v2.uploader.upload(file, { secure: true }).catch(e => {
+    throw new Error(e);
+  });
+  return response;
+};
+
+export const deleteImages = async (publicIds: string[]) => {
+  await v2.api.delete_resources(publicIds).catch(e => console.log(e))
 }
