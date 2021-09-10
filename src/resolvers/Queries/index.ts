@@ -1,6 +1,8 @@
 import * as Post from "./Post";
 import * as User from "./User";
-export const Query={
+import * as Signature from "./Signature";
+export const Query = {
     ...Post,
-    ...User
+    ...User,
+    ...Signature,
 }

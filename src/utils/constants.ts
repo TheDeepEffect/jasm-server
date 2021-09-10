@@ -2,6 +2,7 @@ export const APP_SECRET = process.env.APP_SECRET || ""
 
 export const isDev = () => process.env.NODE_ENV === 'development'
 export const ALLOWED_URL = process.env.ALLOWED_URL
+export const CLOUDINARY_SECRET = process.env.CLOUDINARY_APP_SECRET || "";
 export const tokens = {
   access: {
     name: 'ACCESS_TOKEN',

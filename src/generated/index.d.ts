@@ -63,6 +63,10 @@ export interface NexusGenObjects {
   Mutation: {};
   Post: prisma.Post;
   Query: {};
+  Signature: { // root type
+    signature: string; // String!
+    timestamp: number; // Int!
+  }
   Subscription: {};
   User: prisma.User;
   UserAlreadyExists: { // root type
@@ -143,7 +147,12 @@ export interface NexusGenFieldTypes {
   Query: { // field return type
     feed: Array<NexusGenRootTypes['Post'] | null> | null; // [Post]
     post: NexusGenRootTypes['Post'] | null; // Post
+    signature: NexusGenRootTypes['Signature'] | null; // Signature
     users: Array<NexusGenRootTypes['User'] | null> | null; // [User]
+  }
+  Signature: { // field return type
+    signature: string; // String!
+    timestamp: number; // Int!
   }
   Subscription: { // field return type
     latestComment: NexusGenRootTypes['Comment'] | null; // Comment
@@ -229,7 +238,12 @@ export interface NexusGenFieldTypeNames {
   Query: { // field return type name
     feed: 'Post'
     post: 'Post'
+    signature: 'Signature'
     users: 'User'
+  }
+  Signature: { // field return type name
+    signature: 'String'
+    timestamp: 'Int'
   }
   Subscription: { // field return type name
     latestComment: 'Comment'

@@ -211,3 +211,11 @@ export const LogoutResult = unionType({
     return t.__typename
   }
 })
+
+export const Signature = objectType({
+  name: "Signature",
+  definition(t) {
+    t.nonNull.string("signature");
+    t.nonNull.int("timestamp");
+  }
+})

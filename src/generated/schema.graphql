@@ -79,7 +79,13 @@ type Post {
 type Query {
   feed: [Post]
   post(id: String!): Post
+  signature: Signature
   users(filter: String): [User]
+}
+
+type Signature {
+  signature: String!
+  timestamp: Int!
 }
 
 union SignupResult = AuthPayload | UserAlreadyExists
