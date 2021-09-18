@@ -1,14 +1,13 @@
-import { PrismaClient } from "@prisma/client"
+import { PrismaClient } from "@prisma/client";
 import { PubSub } from "graphql-subscriptions";
 import { Context, cookie, generateCookieType, Token } from "../types";
 import { APP_SECRET, errors, Errors, tokens } from "./constants";
-import { sign, verify } from 'jsonwebtoken';
+import { sign, verify } from "jsonwebtoken";
 import jwtDecode from "jwt-decode";
 import { v2 } from "cloudinary";
 
-
-export const prisma = new PrismaClient()
-const pubsub = new PubSub()
+export const prisma = new PrismaClient();
+const pubsub = new PubSub();
 
 export const generateAccessToken = (userId: string) => {
   const accessToken = sign(
@@ -21,8 +20,8 @@ export const generateAccessToken = (userId: string) => {
     {
       expiresIn: tokens.access.expiry,
     }
-  )
-  return accessToken
+  );
+  return accessToken;
 };
 export const generateCookie = (userId: string): generateCookieType => {
   const accessToken = generateAccessToken(userId);
@@ -31,34 +30,34 @@ export const generateCookie = (userId: string): generateCookieType => {
     value: accessToken,
     options: {
       httpOnly: true,
-      maxAge: 43200,
+      maxAge: 86400,
       sameSite: "none",
-      secure: true
-    }
-  }
+      secure: true,
+    },
+  };
   const decodedToken = jwtDecode(accessToken);
   // @ts-ignore
   const expiresAt = decodedToken?.exp;
-  return { cookie, expiresAt }
-}
+  return { cookie, expiresAt };
+};
 
 export const returnError = (error: keyof Errors) => {
-  return errors[error]
-}
+  return errors[error];
+};
 
 export const createContext = (ctx: any): Context => {
   let userId: string;
   try {
-    let Authorization = ''
-    Authorization = ctx.req.cookies?.['Token'];
-    const token = Authorization
+    let Authorization = "";
+    Authorization = ctx.req.cookies?.["Token"];
+    const token = Authorization;
 
-    const verifiedToken = verify(token, APP_SECRET) as Token
+    const verifiedToken = verify(token, APP_SECRET) as Token;
     if (!verifiedToken.userId && verifiedToken.type !== tokens.access.name)
-      userId = ""
-    else userId = verifiedToken.userId
+      userId = "";
+    else userId = verifiedToken.userId;
   } catch (e) {
-    userId = ""
+    userId = "";
   }
   return {
     ...ctx,
@@ -66,17 +65,19 @@ export const createContext = (ctx: any): Context => {
     pubsub,
     setCookies: new Array(),
     setHeaders: new Array(),
-    userId
-  }
-}
+    userId,
+  };
+};
 
 export const getImageData = async (file: string) => {
-  const response = await v2.uploader.upload(file, { secure: true }).catch(e => {
-    throw new Error(e);
-  });
+  const response = await v2.uploader
+    .upload(file, { secure: true })
+    .catch((e) => {
+      throw new Error(e);
+    });
   return response;
 };
 
 export const deleteImages = async (publicIds: string[]) => {
-  await v2.api.delete_resources(publicIds).catch(e => console.log(e))
-}
+  await v2.api.delete_resources(publicIds).catch((e) => console.log(e));
+};
