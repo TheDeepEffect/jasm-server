@@ -314,6 +314,10 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
+    feed: { // args
+      skip?: number | null; // Int
+      take?: number | null; // Int
+    }
     post: { // args
       id: string; // String!
     }
