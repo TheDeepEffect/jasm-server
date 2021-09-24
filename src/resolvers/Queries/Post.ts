@@ -17,7 +17,7 @@ export const post = extendType({
         }),
       },
       async resolve(_parent, args, ctx) {
-        const { skip, take } = args;
+        const { skip, take, orderBy } = args;
         return await ctx.prisma.post.findMany({
           skip: skip || undefined,
           take: take || undefined,
@@ -27,6 +27,10 @@ export const post = extendType({
               { isPrivate: false },
               { authorId: ctx.userId },
             ],
+          },
+          // @ts-ignore
+          orderBy: {
+            createdAt: orderBy,
           },
         });
       },
