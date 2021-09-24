@@ -77,7 +77,7 @@ type Post {
 }
 
 type Query {
-  feed(skip: Int, take: Int): [Post]
+  feed(orderBy: orderBy = desc, skip: Int, take: Int): [Post]
   post(id: String!): Post
   users(filter: String): [User]
 }
@@ -107,4 +107,9 @@ type User {
 
 type UserAlreadyExists {
   message: String!
+}
+
+enum orderBy {
+  asc
+  desc
 }

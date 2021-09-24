@@ -1,11 +1,21 @@
-import { extendType, intArg, nonNull, stringArg } from "nexus";
+import { arg, enumType, extendType, intArg, nonNull, stringArg } from "nexus";
 
 export const post = extendType({
   type: "Query",
   definition(t) {
     t.list.field("feed", {
       type: "Post",
-      args: { skip: intArg(), take: intArg() },
+      args: {
+        skip: intArg(),
+        take: intArg(),
+        orderBy: arg({
+          type: enumType({
+            name: "orderBy",
+            members: ["asc", "desc"],
+          }),
+          default: "desc",
+        }),
+      },
       async resolve(_parent, args, ctx) {
         const { skip, take } = args;
         return await ctx.prisma.post.findMany({

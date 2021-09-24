@@ -32,6 +32,7 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
+  orderBy: "asc" | "desc"
 }
 
 export interface NexusGenScalars {
@@ -81,7 +82,7 @@ export interface NexusGenUnions {
 
 export type NexusGenRootTypes = NexusGenObjects & NexusGenUnions
 
-export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
+export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
 export interface NexusGenFieldTypes {
   AuthPayload: { // field return type
@@ -315,6 +316,7 @@ export interface NexusGenArgTypes {
   }
   Query: {
     feed: { // args
+      orderBy: NexusGenEnums['orderBy'] | null; // orderBy
       skip?: number | null; // Int
       take?: number | null; // Int
     }
@@ -340,7 +342,7 @@ export type NexusGenObjectNames = keyof NexusGenObjects;
 
 export type NexusGenInputNames = never;
 
-export type NexusGenEnumNames = never;
+export type NexusGenEnumNames = keyof NexusGenEnums;
 
 export type NexusGenInterfaceNames = never;
 
