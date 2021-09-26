@@ -148,7 +148,7 @@ export interface NexusGenFieldTypes {
   }
   Subscription: { // field return type
     latestComment: NexusGenRootTypes['Comment'] | null; // Comment
-    latestLike: NexusGenRootTypes['Like'] | null; // Like
+    latestLikes: NexusGenRootTypes['Like'] | null; // Like
     latestPost: NexusGenRootTypes['Post'] | null; // Post
     newFollow: NexusGenRootTypes['Follow'] | null; // Follow
   }
@@ -234,7 +234,7 @@ export interface NexusGenFieldTypeNames {
   }
   Subscription: { // field return type name
     latestComment: 'Comment'
-    latestLike: 'Like'
+    latestLikes: 'Like'
     latestPost: 'Post'
     newFollow: 'Follow'
   }
@@ -331,7 +331,7 @@ export interface NexusGenArgTypes {
     latestComment: { // args
       id: string; // String!
     }
-    latestLike: { // args
+    latestLikes: { // args
       id: string; // String!
     }
   }

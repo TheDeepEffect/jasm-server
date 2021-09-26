@@ -86,7 +86,7 @@ union SignupResult = AuthPayload | UserAlreadyExists
 
 type Subscription {
   latestComment(id: String!): Comment
-  latestLike(id: String!): Like
+  latestLikes(id: String!): Like
   latestPost: Post
   newFollow: Follow
 }
