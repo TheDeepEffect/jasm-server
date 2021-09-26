@@ -294,7 +294,7 @@ export interface NexusGenArgTypes {
       id: string; // String!
     }
     unlike: { // args
-      postId: string; // String!
+      id: string; // String!
     }
     updateComment: { // args
       content: string; // String!

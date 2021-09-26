@@ -20,14 +20,11 @@ export const like = extendType({
     });
     t.field("unlike", {
       type: "Like",
-      args: { postId: nonNull(stringArg()) },
+      args: { id: nonNull(stringArg()) },
       async resolve(_, args, ctx) {
         const unlike = await ctx.prisma.like.delete({
           where: {
-            userId_postId: {
-              postId: args.postId,
-              userId: ctx.userId,
-            },
+            id: args.id,
           },
         });
         return unlike;
