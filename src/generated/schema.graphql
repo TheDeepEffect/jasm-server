@@ -85,8 +85,8 @@ type Query {
 union SignupResult = AuthPayload | UserAlreadyExists
 
 type Subscription {
-  latestComment: Comment
-  latestLike: Like
+  latestComment(id: String!): Comment
+  latestLike(id: String!): Like
   latestPost: Post
   newFollow: Follow
 }

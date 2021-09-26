@@ -327,6 +327,14 @@ export interface NexusGenArgTypes {
       filter?: string | null; // String
     }
   }
+  Subscription: {
+    latestComment: { // args
+      id: string; // String!
+    }
+    latestLike: { // args
+      id: string; // String!
+    }
+  }
 }
 
 export interface NexusGenAbstractTypeMembers {
