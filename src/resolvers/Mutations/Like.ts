@@ -1,3 +1,4 @@
+import { prisma } from ".prisma/client";
 import { extendType, nonNull, stringArg } from "nexus";
 
 export const like = extendType({
@@ -20,8 +21,16 @@ export const like = extendType({
     t.field("unlike", {
       type: "Like",
       args: { postId: nonNull(stringArg()) },
-      resolve(_, args, ctx) {
-        return ctx.prisma.like.delete({ where: { id: args.postId } });
+      async resolve(_, args, ctx) {
+        const unlike = await ctx.prisma.like.delete({
+          where: {
+            userId_postId: {
+              postId: args.postId,
+              userId: ctx.userId,
+            },
+          },
+        });
+        return unlike;
       },
     });
   },
