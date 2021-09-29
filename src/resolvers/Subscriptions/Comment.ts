@@ -1,15 +1,15 @@
 import { Prisma } from "@prisma/client";
-import { nonNull, stringArg, subscriptionField } from "nexus";
+import { list, nonNull, stringArg, subscriptionField } from "nexus";
 
 export const latestComment = subscriptionField("latestComment", {
   type: "Comment",
-  args: { id: nonNull(stringArg()) },
+  args: { ids: list(nonNull(stringArg())) },
   subscribe(root, args, ctx) {
     return ctx.pubsub.asyncIterator("latestComment");
   },
   resolve(root: Prisma.CommentGetPayload<{}>, args, ctx) {
-    const { id } = args;
-    if (root.postId === id) {
+    const { ids } = args;
+    if (ids?.includes(root.postId)) {
       return root as Prisma.CommentGetPayload<{}>;
     }
     return null;

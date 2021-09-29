@@ -142,7 +142,9 @@ export interface NexusGenFieldTypes {
     url: string | null; // String
   }
   Query: { // field return type
+    currentUser: NexusGenRootTypes['User'] | null; // User
     feed: Array<NexusGenRootTypes['Post'] | null> | null; // [Post]
+    likes: Array<NexusGenRootTypes['Like'] | null> | null; // [Like]
     post: NexusGenRootTypes['Post'] | null; // Post
     users: Array<NexusGenRootTypes['User'] | null> | null; // [User]
   }
@@ -150,6 +152,7 @@ export interface NexusGenFieldTypes {
     latestComment: NexusGenRootTypes['Comment'] | null; // Comment
     latestLikes: NexusGenRootTypes['Like'] | null; // Like
     latestPost: NexusGenRootTypes['Post'] | null; // Post
+    latestUnlikes: NexusGenRootTypes['Like'] | null; // Like
     newFollow: NexusGenRootTypes['Follow'] | null; // Follow
   }
   User: { // field return type
@@ -228,7 +231,9 @@ export interface NexusGenFieldTypeNames {
     url: 'String'
   }
   Query: { // field return type name
+    currentUser: 'User'
     feed: 'Post'
+    likes: 'Like'
     post: 'Post'
     users: 'User'
   }
@@ -236,6 +241,7 @@ export interface NexusGenFieldTypeNames {
     latestComment: 'Comment'
     latestLikes: 'Like'
     latestPost: 'Post'
+    latestUnlikes: 'Like'
     newFollow: 'Follow'
   }
   User: { // field return type name
@@ -315,10 +321,16 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
+    currentUser: { // args
+      username: string; // String!
+    }
     feed: { // args
       orderBy: NexusGenEnums['orderBy'] | null; // orderBy
       skip?: number | null; // Int
       take?: number | null; // Int
+    }
+    likes: { // args
+      postId: string; // String!
     }
     post: { // args
       id: string; // String!
@@ -329,10 +341,13 @@ export interface NexusGenArgTypes {
   }
   Subscription: {
     latestComment: { // args
-      id: string; // String!
+      ids?: string[] | null; // [String!]
     }
     latestLikes: { // args
-      id: string; // String!
+      ids?: string[] | null; // [String!]
+    }
+    latestUnlikes: { // args
+      ids?: string[] | null; // [String!]
     }
   }
 }

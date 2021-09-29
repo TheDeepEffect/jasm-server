@@ -77,7 +77,9 @@ type Post {
 }
 
 type Query {
+  currentUser(username: String!): User
   feed(orderBy: orderBy = desc, skip: Int, take: Int): [Post]
+  likes(postId: String!): [Like]
   post(id: String!): Post
   users(filter: String): [User]
 }
@@ -85,9 +87,10 @@ type Query {
 union SignupResult = AuthPayload | UserAlreadyExists
 
 type Subscription {
-  latestComment(id: String!): Comment
-  latestLikes(id: String!): Like
+  latestComment(ids: [String!]): Comment
+  latestLikes(ids: [String!]): Like
   latestPost: Post
+  latestUnlikes(ids: [String!]): Like
   newFollow: Follow
 }
 

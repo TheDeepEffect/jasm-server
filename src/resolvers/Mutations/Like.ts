@@ -14,6 +14,7 @@ export const like = extendType({
             post: { connect: { id: args.postId } },
           },
         });
+
         ctx.pubsub.publish("latestLikes", newLike);
         return newLike;
       },
@@ -27,6 +28,7 @@ export const like = extendType({
             id: args.id,
           },
         });
+        ctx.pubsub.publish("latestUnlikes", unlike);
         return unlike;
       },
     });
